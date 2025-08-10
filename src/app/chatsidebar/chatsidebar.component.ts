@@ -12,7 +12,7 @@ export class ChatsidebarComponent {
 
   openChat(chat: any) {
     this.openedChat = chat;
-    this.openedChatChange.emit(chat);
+    this.openedChatChange.emit(chat?.chat_id);
   }
 
   formatDate(dateObj: any): string {

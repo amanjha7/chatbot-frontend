@@ -40,7 +40,11 @@ export class ChatComponent implements AfterViewChecked, OnChanges {
     this.chatService.getMessageOfChat(this.openedChat)
       .pipe(take(1))
       .subscribe({
-        next: (messages) => this.messages = messages[0].message,
+        next: (messages) => {
+          if(messages?.length)
+            this.messages = messages[0].message
+          else this.messages = []
+        },
         error: (err) => this.snackBar.open('Failed to load messages', 'Close', { duration: 3000 })
       });
   }
