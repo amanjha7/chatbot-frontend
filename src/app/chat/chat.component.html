@@ -1,0 +1,28 @@
+<div class="chat-container">
+  <h2>AI Chat</h2>
+
+  <div class="settings">
+    <label>Provider:
+      <input [(ngModel)]="provider" placeholder="e.g. perplexity" />
+    </label>
+    <label>Model:
+      <input [(ngModel)]="model" placeholder="e.g. sonar" />
+    </label>
+    <label>API Key:
+      <input [(ngModel)]="apiKey" placeholder="Enter your API key" type="password" />
+    </label>
+  </div>
+
+  <div class="messages">
+    <div *ngFor="let msg of messages" [class.user]="msg.role === 'user'" [class.assistant]="msg.role === 'assistant'">
+      <strong>{{ msg.role }}:</strong> {{ msg.content }}
+    </div>
+  </div>
+
+  <div class="input-row">
+    <input [(ngModel)]="userInput" placeholder="Type your message..." (keyup.enter)="send()" />
+    <button (click)="send()" [disabled]="isLoading">Send</button>
+  </div>
+
+  <div *ngIf="isLoading">Thinking...</div>
+</div>
