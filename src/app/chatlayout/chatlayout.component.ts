@@ -37,8 +37,8 @@ export class ChatlayoutComponent implements OnInit{
     this.chatService.createNewChat(this.openedChat, chatName ?? "New Chat").subscribe({
       next: () => {
         console.log("New Chat Created");
-        this.allChats = [ ...this.allChats,
-          { chat_id: this.openedChat, title: chatName ?? "New Chat", "created_at": new Date() }
+        this.allChats = [ { chat_id: this.openedChat, title: chatName ?? "New Chat", "created_at": new Date() },
+          ...this.allChats
         ];
       }
     });
