@@ -1,1 +1,163 @@
-/* You can add global styles to this file, and also import other style files */
+// style.scss -- Slim cross-browser scrollbar (global)
+
+// ========== CONFIG ==========
+$scrollbar-width: 8px !default;        // thickness (vertical/horizontal)
+$scrollbar-radius: 8px !default;       // thumb border radius
+$scrollbar-track-bg: rgba(0, 0, 0, 0.04) !default; // track background (or transparent)
+$scrollbar-thumb-bg: rgba(0, 0, 0, 0.35) !default; // thumb normal
+$scrollbar-thumb-hover: rgba(0, 0, 0, 0.55) !default; // thumb hover/active
+$scrollbar-thumb-focus-outline: 2px solid rgba(0,0,0,0.12) !default;
+
+// Optional inverted theme example
+$scrollbar-inverse-track-bg: rgba(255,255,255,0.06) !default;
+$scrollbar-inverse-thumb-bg: rgba(255,255,255,0.28) !default;
+$scrollbar-inverse-thumb-hover: rgba(255,255,255,0.44) !default;
+
+// ========== MIXINS ==========
+/// WebKit scrollbar styling (Chrome, Edge Chromium, Safari)
+@mixin webkit-slim-scrollbar($width: $scrollbar-width) {
+  // Vertical scrollbar thickness and horizontal scrollbar height
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $width;
+  }
+
+  // Track (background)
+  &::-webkit-scrollbar-track {
+    background: $scrollbar-track-bg;
+  }
+
+  // Thumb (draggable handle)
+  &::-webkit-scrollbar-thumb {
+    background-color: $scrollbar-thumb-bg;
+    border-radius: $scrollbar-radius;
+    border: 2px solid transparent;
+    background-clip: padding-box; // prevents thumb looking larger due to border
+    min-height: 20px; // ensures small content still gets a usable thumb
+  }
+
+  // Thumb hover / active
+  &::-webkit-scrollbar-thumb:hover,
+  &::-webkit-scrollbar-thumb:active {
+    background-color: $scrollbar-thumb-hover;
+  }
+
+  // If content has rounded container, corner should match
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+}
+
+/// Firefox slim scrollbar (best-effort)
+/// - scrollbar-width: auto | thin | none
+/// - scrollbar-color: thumb track
+/// Note: Firefox doesn't support fine-grained pseudo-element rules.
+@mixin firefox-slim-scrollbar($thumb: $scrollbar-thumb-bg, $track: $scrollbar-track-bg) {
+  scrollbar-width: thin;            // "thin" makes it slimmer than default
+  scrollbar-color: $thumb $track;   // thumb then track
+}
+
+// ========== GLOBAL APPLICATION ==========
+/*
+  Apply globally to body and to common scrollable containers.
+  We use * and pseudo-elements so scrollbars for ANY scrollable element
+  will get these styles where supported.
+*/
+*,
+*::before,
+*::after {
+  // Firefox fallback & general hint
+  @include firefox-slim-scrollbar();
+  // Legacy IE/Edge — better than nothing
+  -ms-overflow-style: auto; // auto | none
+}
+
+// Apply WebKit rules to html/body and any element with overflow auto/scroll
+html, body, .custom-scrollbar, textarea, pre, code {
+  @include webkit-slim-scrollbar();
+  // Ensure accessibility focus outline for thumb is visible on focusable scroll containers
+  // (Note: browsers don't pass focus to scroll thumb, but this is helpful for focused containers.)
+  &:focus {
+    outline: $scrollbar-thumb-focus-outline;
+    outline-offset: 2px;
+  }
+}
+
+/* Example: apply to any scrollable region (class usage) */
+.custom-scrollbar {
+  overflow: auto;   // make sure element is scrollable
+  @include webkit-slim-scrollbar();
+  @include firefox-slim-scrollbar();
+}
+
+/* Horizontal-only example (if you have a horizontal scroller) */
+.horizontal-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  @include webkit-slim-scrollbar($width: $scrollbar-width);
+  @include firefox-slim-scrollbar();
+}
+
+// ========== INVERTED (DARK BG) THEME ==========
+/* If you have dark backgrounds, use a different palette. Apply via a class. */
+.scrollbar-inverse {
+  @include webkit-slim-scrollbar();
+  &::-webkit-scrollbar-track { background: $scrollbar-inverse-track-bg; }
+  &::-webkit-scrollbar-thumb { background-color: $scrollbar-inverse-thumb-bg; }
+  &::-webkit-scrollbar-thumb:hover { background-color: $scrollbar-inverse-thumb-hover; }
+
+  // Firefox
+  @include firefox-slim-scrollbar($scrollbar-inverse-thumb-bg, $scrollbar-inverse-track-bg);
+}
+
+// ========== UTILS ==========
+/* Utility class to hide native scrollbar while keeping scroll functionality
+   (useful for overlay custom scrollbars or design choices).
+   Note: keyboard and accessibility must be considered when hiding scrollbars. */
+.hide-native-scrollbar {
+  // For WebKit
+  &::-webkit-scrollbar { display: none; }
+  // For IE/Edge
+  -ms-overflow-style: none;
+  // For Firefox
+  scrollbar-width: none;
+}
+
+/* Accessible focus style for keyboard users */
+.scrollable:focus {
+  outline: 3px solid rgba(0, 123, 255, 0.25);
+  outline-offset: 2px;
+}
+
+/* Ensure code/pre blocks also get slim scrollbars when overflow occurs */
+pre, code {
+  @include webkit-slim-scrollbar();
+  @include firefox-slim-scrollbar();
+}
+
+/* Optional: increase clickable area for small thumbs on touch devices via padding on container */
+.touch-friendly-scroll {
+  // adds some padding so the visual thin scrollbar remains but touch target is a bit larger
+  padding-right: 6px;
+  @include webkit-slim-scrollbar();
+}
+
+// ========== NOTES & ACCESSIBILITY ==========
+/*
+- Firefox only supports 'scrollbar-width' and 'scrollbar-color'; it does not support ::-webkit-scrollbar.
+  The mixin uses those properties for the best possible appearance in Firefox.
+
+- Hiding scrollbars (with .hide-native-scrollbar) can hurt discoverability and keyboard users.
+  If you hide scrollbars, ensure there are clear affordances that content is scrollable and
+  that keyboard navigation still works (tabindex, focus styles).
+
+- On macOS, scrollbars can be set to overlay and auto-hide in OS settings; that will affect visibility.
+
+- If you need pixel-perfect custom scroll UI (thumb with content-aware size, animations, etc),
+  consider building a custom JS/CSS scrollbar component. But the above is lightweight and CSS-only.
+
+- If you use a UI library (Angular Material, etc.), you might need to target specific container classes
+  (e.g. `.mat-drawer-content`, `.cdk-virtual-scroll-viewport`) — just add the appropriate selector
+  and include the mixins there.
+*/
+

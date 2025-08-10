@@ -1,48 +1,87 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewChecked, Input } from '@angular/core';
 import { ChatService, ChatMessage } from '../chat.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent {
-
-  provider = 'perplexity'; // default
-  model = 'sonar';         // default
-  apiKey = '';             // user-provided API key
-
+export class ChatComponent implements AfterViewChecked {
+  provider = 'perplexity';
+  model = 'sonar';
+  apiKey = '';
   userInput = '';
-  messages: ChatMessage[] = [];
-
+  messages: any = [];
   isLoading = false;
+  showSettings = false;
+  hideApiKey = true;
+  @Input() openedChat:any = ''
 
-  constructor(private chatService: ChatService) {}
+  @ViewChild('messageContainer') private messageContainer!: ElementRef;
 
-  send() {
-    if (!this.userInput.trim()) return;
+  constructor(
+    private chatService: ChatService,
+    private snackBar: MatSnackBar
+  ) {}
 
-    // Add user message to chat
-    this.messages.push({ role: 'user', content: this.userInput });
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
-    const payload: ChatMessage[] = [...this.messages];
+  toggleSettings() {
+    this.showSettings = !this.showSettings;
+  }
 
+  send(event?: any) {
+    if (event && !event.shiftKey) {
+      event.preventDefault();
+    }
+    
+    if (!this.userInput.trim() || this.isLoading) return;
+
+    const userMessage = {
+      role: 'user',
+      content: this.userInput,
+      timestamp: new Date()
+    };
+    this.messages = [...this.messages, userMessage];
     this.isLoading = true;
+    this.userInput = '';
 
-    this.chatService.sendMessage(this.provider, this.model, this.apiKey, payload)
+    this.chatService.sendMessage(this.provider, this.model, this.apiKey, this.messages, this.openedChat)
       .subscribe({
         next: (res) => {
-          const assistantReply = res?.choices?.[0]?.message?.content
-            || res?.output || 'No response';
-          this.messages.push({ role: 'assistant', content: assistantReply });
+          const content = res?.choices?.[0]?.message?.content || 
+                          res?.output || 
+                          'No response from the AI';
+          this.messages = [
+            ...this.messages, 
+            {
+              role: 'assistant',
+              content: content,
+              timestamp: new Date()
+            }
+          ];
           this.isLoading = false;
-          this.userInput = '';
         },
         error: (err) => {
           console.error(err);
-          this.messages.push({ role: 'assistant', content: 'Error: ' + err.message });
+          this.snackBar.open(`Error: ${err.error?.message || err.message}`, 'Dismiss', {
+            duration: 5000,
+            panelClass: ['error-snackbar']
+          });
           this.isLoading = false;
         }
       });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      this.messageContainer.nativeElement.scrollTop = 
+        this.messageContainer.nativeElement.scrollHeight;
+    } catch(err) { 
+      console.error(err);
+    }
   }
 }
