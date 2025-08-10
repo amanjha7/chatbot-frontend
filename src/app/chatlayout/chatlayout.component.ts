@@ -17,25 +17,29 @@ export class ChatlayoutComponent implements OnInit{
   ngOnInit(): void {
     this.chatService.getallChats().subscribe({
       next: (chats) => {
-        this.allChats = chats;
+        this.allChats = chats ?? [];
         console.log("All Chats", this.allChats);
 
         if (!this.allChats.length) {
-          this.openedChat = this.generateShortVVID();
-          this.chatService.createNewChat(this.openedChat, "New Chat").subscribe({
-            next: () => {
-              console.log("New Chat Created");
-              this.allChats = [
-                { chat_id: this.openedChat, title: "New Chat" }
-              ];
-            }
-          });
+          this.CreateNewChat();
         } else if(this.openedChat == ''){
           this.openedChat = this.allChats[0]?.chat_id
         }
       },
       error: (err) => {
         console.error("Error fetching chats", err);
+      }
+    });
+  }
+
+  CreateNewChat() {
+    this.openedChat = this.generateShortVVID();
+    this.chatService.createNewChat(this.openedChat, "New Chat").subscribe({
+      next: () => {
+        console.log("New Chat Created");
+        this.allChats = [ ...this.allChats,
+          { chat_id: this.openedChat, title: "New Chat", "created_at": new Date() }
+        ];
       }
     });
   }

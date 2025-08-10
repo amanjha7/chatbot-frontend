@@ -1,5 +1,11 @@
 <div class="sidebar">
-  <h3>Chats</h3>
+  <div class="sidebar-header">
+    <h3>Chats</h3>
+    <button mat-icon-button (click)="createNewChat()" aria-label="Create New Chat">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+
   <ul class="chat-list">
     <li 
       *ngFor="let chat of allChats" 

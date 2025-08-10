@@ -9,6 +9,7 @@ export class ChatsidebarComponent {
   @Input() allChats: any[] = [];
   @Input() openedChat: any;
   @Output() openedChatChange = new EventEmitter<any>();
+  @Output() newChat = new EventEmitter<any>();
 
   openChat(chat: any) {
     this.openedChat = chat;
@@ -22,5 +23,9 @@ export class ChatsidebarComponent {
     } catch {
       return '';
     }
+  }
+
+  createNewChat(){
+    this.newChat.emit();
   }
 }
