@@ -11,6 +11,9 @@ export class ChatsidebarComponent {
   @Output() openedChatChange = new EventEmitter<any>();
   @Output() newChat = new EventEmitter<any>();
 
+  isCreating = false;
+  newChatTitle = '';
+
   openChat(chat: any) {
     this.openedChat = chat;
     this.openedChatChange.emit(chat?.chat_id);
@@ -19,14 +22,28 @@ export class ChatsidebarComponent {
   formatDate(dateObj: any): string {
     try {
       const date = new Date(dateObj?.$date || dateObj);
-      return date.toLocaleString(); // Matches JS's new Date().toString() style but localized
+      return date.toLocaleString();
     } catch {
       return '';
     }
   }
 
-  createNewChat(){
-    let name = window.prompt("Enter Chat Title")
-    this.newChat.emit(name);
+  startCreate() {
+    this.isCreating = true;
+    this.newChatTitle = '';
+    // Delay focus until input is rendered
+    setTimeout(() => {
+      const input = document.getElementById('newChatInput') as HTMLInputElement;
+      input?.focus();
+    });
+  }
+
+  finishCreate() {
+    const title = this.newChatTitle.trim();
+    if (title) {
+      this.newChat.emit(title);
+    }
+    this.isCreating = false;
+    this.newChatTitle = '';
   }
 }

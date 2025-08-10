@@ -1,9 +1,22 @@
 <div class="sidebar">
   <div class="sidebar-header">
-    <h3>Chats</h3>
-    <button mat-icon-button (click)="createNewChat()" aria-label="Create New Chat">
-      <mat-icon>add</mat-icon>
-    </button>
+    <h3 *ngIf="!isCreating">Chats</h3>
+    <ng-template #inputTemplate>
+      <input
+        id="newChatInput"
+        [(ngModel)]="newChatTitle"
+        (blur)="finishCreate()"
+        (keyup.enter)="finishCreate()"
+        placeholder="New Chat Title."
+      />
+    </ng-template>
+
+    <ng-container *ngIf="!isCreating; else inputTemplate">
+      <button mat-icon-button (click)="startCreate()" aria-label="Create New Chat">
+        <mat-icon>add</mat-icon>
+      </button>
+    </ng-container>
+
   </div>
 
   <ul class="chat-list">

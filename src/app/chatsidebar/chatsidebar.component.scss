@@ -52,3 +52,22 @@
     }
   }
 }
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  input {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px;
+    outline: none;
+
+    &:focus {
+      border-color: #1976d2;
+    }
+  }
+}
