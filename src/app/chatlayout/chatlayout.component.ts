@@ -32,13 +32,13 @@ export class ChatlayoutComponent implements OnInit{
     });
   }
 
-  CreateNewChat() {
+  CreateNewChat(chatName?:string) {
     this.openedChat = this.generateShortVVID();
-    this.chatService.createNewChat(this.openedChat, "New Chat").subscribe({
+    this.chatService.createNewChat(this.openedChat, chatName ?? "New Chat").subscribe({
       next: () => {
         console.log("New Chat Created");
         this.allChats = [ ...this.allChats,
-          { chat_id: this.openedChat, title: "New Chat", "created_at": new Date() }
+          { chat_id: this.openedChat, title: chatName ?? "New Chat", "created_at": new Date() }
         ];
       }
     });

@@ -26,6 +26,7 @@ export class ChatsidebarComponent {
   }
 
   createNewChat(){
-    this.newChat.emit();
+    let name = window.prompt("Enter Chat Title")
+    this.newChat.emit(name);
   }
 }
