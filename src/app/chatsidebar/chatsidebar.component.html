@@ -1,0 +1,13 @@
+<div class="sidebar">
+  <h3>Chats</h3>
+  <ul class="chat-list">
+    <li 
+      *ngFor="let chat of allChats" 
+      [class.active]="openedChat?.chat_id === chat.chat_id"
+      (click)="openChat(chat)"
+    >
+      <div class="chat-title">{{ chat.title }}</div>
+      <div class="chat-date">{{ formatDate(chat.created_at) }}</div>
+    </li>
+  </ul>
+</div>

@@ -74,4 +74,8 @@ export class ChatService {
   createNewChat(chatId:string,title:string){
     return this.http.post<any>(`${this.baseUrl}/chat/add`,{"chat_id":chatId,"title":title},{})
   }
+
+  getMessageOfChat(chatId:string){
+    return this.http.get<any>(`${this.baseUrl}/message/${chatId}`)
+  }
 }

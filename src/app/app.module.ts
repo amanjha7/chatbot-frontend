@@ -18,13 +18,15 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 
 import { MarkdownModule } from 'ngx-markdown';
 import { ChatlayoutComponent } from './chatlayout/chatlayout.component';
+import { ChatsidebarComponent } from './chatsidebar/chatsidebar.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    ChatlayoutComponent
+    ChatlayoutComponent,
+    ChatsidebarComponent
   ],
   imports: [
     BrowserModule,

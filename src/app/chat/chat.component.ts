@@ -1,13 +1,14 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked, Input } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewChecked, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ChatService, ChatMessage } from '../chat.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements AfterViewChecked {
+export class ChatComponent implements AfterViewChecked, OnChanges {
   provider = 'perplexity';
   model = 'sonar';
   apiKey = '';
@@ -28,6 +29,22 @@ export class ChatComponent implements AfterViewChecked {
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['openedChat'] && changes['openedChat'].currentValue) {
+      this.updateMessages();
+    }
+  }
+
+  private updateMessages() {
+    this.chatService.getMessageOfChat(this.openedChat)
+      .pipe(take(1))
+      .subscribe({
+        next: (messages) => this.messages = messages[0].message,
+        error: (err) => this.snackBar.open('Failed to load messages', 'Close', { duration: 3000 })
+      });
+  }
+
 
   toggleSettings() {
     this.showSettings = !this.showSettings;
