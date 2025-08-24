@@ -48,6 +48,9 @@ export class SignupComponent {
         this.loading = false;
         this.successMessage = 'Registration successful ✅ You can now log in.';
         this.signupForm.reset();
+        if(res.token){
+          localStorage.setItem('token', res.token);
+        }
         this.router.navigate(['/chat']);
       },
       error: (err) => {
