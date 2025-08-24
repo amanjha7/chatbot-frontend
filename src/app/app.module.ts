@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -19,6 +19,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
 import { MarkdownModule } from 'ngx-markdown';
 import { ChatlayoutComponent } from './chatlayout/chatlayout.component';
 import { ChatsidebarComponent } from './chatsidebar/chatsidebar.component';
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { ChatsidebarComponent } from './chatsidebar/chatsidebar.component';
     AppComponent,
     ChatComponent,
     ChatlayoutComponent,
-    ChatsidebarComponent
+    ChatsidebarComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -41,6 +45,8 @@ import { ChatsidebarComponent } from './chatsidebar/chatsidebar.component';
     MatSelectModule,
     MatSnackBarModule,
     TextFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
 
     MarkdownModule.forRoot()
   ],
