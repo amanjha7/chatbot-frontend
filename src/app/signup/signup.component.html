@@ -1,0 +1,80 @@
+<div class="signup-container">
+  <h2>Sign Up</h2>
+
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+    <!-- Username -->
+    <div class="form-group">
+      <label for="username">Name</label>
+      <input
+        id="username"
+        type="text"
+        formControlName="username"
+        placeholder="Enter your username"
+      />
+      <div *ngIf="signupForm.get('username')?.invalid && signupForm.get('username')?.touched"
+           class="error">
+        Valid username is required.
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        placeholder="Enter your email"
+      />
+      <div *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+           class="error">
+        Valid email is required.
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        formControlName="password"
+        placeholder="Enter your password"
+      />
+      <div *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+           class="error">
+        Password must be at least 6 characters.
+      </div>
+    </div>
+
+    <!-- Confirm Password -->
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <input
+        id="confirmPassword"
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Confirm your password"
+      />
+      <div *ngIf="signupForm.errors?.['mismatch'] && signupForm.get('confirmPassword')?.touched"
+           class="error">
+        Passwords do not match.
+      </div>
+    </div>
+
+    <!-- Error message -->
+    <div *ngIf="errorMessage" class="error-msg">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Success message -->
+    <div *ngIf="successMessage" class="success-msg">
+      {{ successMessage }}
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Signing up...' : 'Sign Up' }}
+    </button>
+  </form>
+</div>
