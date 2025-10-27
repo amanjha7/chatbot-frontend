@@ -56,5 +56,41 @@
       <small class="text-muted">Don’t have an account?</small>
       <a routerLink="/signup" class="fw-semibold ms-1 link-primary">Sign up</a>
     </div>
+    <!-- Forgot Password -->
+    <div class="text-end mt-2">
+      <a href="javascript:void(0)" class="text-danger small fw-semibold" (click)="openForgotPassword()">
+        Forgot Password?
+      </a>
+    </div>
   </div>
 </div>
+
+<!-- Forgot Password Modal -->
+<div class="modal-backdrop" *ngIf="showForgotModal"></div>
+
+<div class="forgot-modal rounded-4 shadow-lg" *ngIf="showForgotModal">
+  <h5 class="fw-bold text-center mb-3">Reset Password</h5>
+  <p class="text-muted small mb-3 text-center">
+    Enter your registered email and we will send you a new password.
+  </p>
+
+  <input
+    type="email"
+    class="form-control mb-3"
+    [(ngModel)]="forgotEmail"
+    placeholder="Enter email"
+  />
+
+  <div class="d-flex gap-2">
+    <button class="btn btn-secondary w-50" (click)="closeForgotPassword()">Cancel</button>
+    <button class="btn btn-primary w-50" (click)="submitForgotPassword()" [disabled]="loadingForgot">
+      <span *ngIf="!loadingForgot">Send</span>
+      <span *ngIf="loadingForgot" class="spinner-border spinner-border-sm"></span>
+    </button>
+  </div>
+
+  <div *ngIf="forgotMessage" class="alert alert-info mt-3 small text-center">
+    {{ forgotMessage }}
+  </div>
+</div>
+

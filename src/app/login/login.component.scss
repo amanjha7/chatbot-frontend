@@ -74,3 +74,37 @@
     transform: translateY(0);
   }
 }
+
+
+/* Forgot Password Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(3px);
+}
+
+.forgot-modal {
+  position: fixed;
+  width: 350px;
+  max-width: 90%;
+  background: #fff;
+  padding: 1.5rem;
+  z-index: 2000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  animation: fadeSlideDown 0.3s ease-out;
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}

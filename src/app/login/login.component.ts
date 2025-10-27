@@ -12,6 +12,10 @@ export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
   errorMessage = '';
+  showForgotModal = false;
+  forgotEmail = '';
+  forgotMessage = '';
+  loadingForgot = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     // initialize reactive form
@@ -57,4 +61,39 @@ export class LoginComponent {
       }
     });
   }
+
+  openForgotPassword() {
+    this.showForgotModal = true;
+    this.forgotEmail = '';
+    this.forgotMessage = '';
+  }
+
+  closeForgotPassword() {
+    this.showForgotModal = false;
+  }
+
+  submitForgotPassword() {
+    if (!this.forgotEmail) {
+      this.forgotMessage = 'Please enter an email.';
+      return;
+    }
+
+    this.loadingForgot = true;
+    this.forgotMessage = '';
+
+    this.authService.forgotPassword(this.forgotEmail).subscribe({
+      next: (res) => {
+        this.loadingForgot = false;
+        this.forgotMessage = res.message || 'Check your email inbox.';
+        setTimeout(() => {
+          this.closeForgotPassword();
+        }, 2000);
+      },
+      error: (err) => {
+        this.loadingForgot = false;
+        this.forgotMessage = err.error?.error || 'Something went wrong.';
+      }
+    });
+  }
+
 }
