@@ -51,7 +51,6 @@ export class LoginComponent {
           localStorage.setItem('token', res.token);
         }
 
-        alert('Login successful ✅');
         this.router.navigate(['/chat']);
         // TODO: redirect to dashboard
       },
