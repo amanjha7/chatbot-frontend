@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chatsidebar',
@@ -10,6 +11,8 @@ export class ChatsidebarComponent {
   @Input() openedChat: any;
   @Output() openedChatChange = new EventEmitter<any>();
   @Output() newChat = new EventEmitter<any>();
+
+  constructor(private router: Router) {}
 
   isCreating = false;
   newChatTitle = '';
@@ -45,5 +48,10 @@ export class ChatsidebarComponent {
     }
     this.isCreating = false;
     this.newChatTitle = '';
+  }
+
+  logout() {
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }
