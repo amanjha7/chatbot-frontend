@@ -9,8 +9,8 @@ import { take } from 'rxjs';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements AfterViewChecked, OnChanges {
-  provider = 'perplexity';
-  model = 'sonar';
+  provider = '';
+  model = '';
   apiKey = '';
   userInput = '';
   messages: any = [];
